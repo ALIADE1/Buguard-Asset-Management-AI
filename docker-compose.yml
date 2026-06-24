@@ -29,8 +29,8 @@ services:
       - "${API_PORT:-8000}:8000"
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-asm_user}:${POSTGRES_PASSWORD:-asm_password}@db:5432/${POSTGRES_DB:-asm_db}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      LLM_MODEL: ${LLM_MODEL:-llama3-70b-8192}
       LOG_LEVEL: ${LOG_LEVEL:-info}
     depends_on:
       db:

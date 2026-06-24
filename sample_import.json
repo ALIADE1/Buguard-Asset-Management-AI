@@ -1,0 +1,153 @@
+{
+  "assets": [
+    {
+      "type": "domain",
+      "value": "example.com",
+      "status": "active",
+      "source": "scan",
+      "tags": ["production", "external"],
+      "metadata": {
+        "registrar": "Cloudflare",
+        "whois_expires": "2026-12-01"
+      }
+    },
+    {
+      "type": "subdomain",
+      "value": "api.example.com",
+      "status": "active",
+      "source": "scan",
+      "tags": ["production", "api"],
+      "metadata": {
+        "environment": "production"
+      },
+      "parent": "example.com",
+      "resolves_to": ["203.0.113.10"]
+    },
+    {
+      "type": "subdomain",
+      "value": "staging.example.com",
+      "status": "active",
+      "source": "scan",
+      "tags": ["staging"],
+      "metadata": {
+        "environment": "staging"
+      },
+      "parent": "example.com",
+      "resolves_to": ["203.0.113.20"]
+    },
+    {
+      "type": "ip_address",
+      "value": "203.0.113.10",
+      "status": "active",
+      "source": "scan",
+      "tags": ["production"],
+      "metadata": {
+        "asn": "AS13335",
+        "geo": "US"
+      }
+    },
+    {
+      "type": "ip_address",
+      "value": "203.0.113.20",
+      "status": "stale",
+      "source": "scan",
+      "tags": ["staging"],
+      "metadata": {
+        "asn": "AS13335",
+        "geo": "EU"
+      }
+    },
+    {
+      "type": "service",
+      "value": "https://api.example.com:443",
+      "status": "active",
+      "source": "scan",
+      "tags": ["production", "https"],
+      "metadata": {
+        "port": 443,
+        "protocol": "tcp",
+        "service_name": "HTTPS"
+      },
+      "runs_on": "203.0.113.10"
+    },
+    {
+      "type": "service",
+      "value": "ssh://203.0.113.10:22",
+      "status": "active",
+      "source": "scan",
+      "tags": ["production", "ssh", "sensitive"],
+      "metadata": {
+        "port": 22,
+        "protocol": "tcp",
+        "service_name": "SSH",
+        "banner": "OpenSSH_8.9"
+      },
+      "runs_on": "203.0.113.10"
+    },
+    {
+      "type": "certificate",
+      "value": "*.example.com",
+      "status": "active",
+      "source": "scan",
+      "tags": ["wildcard", "production"],
+      "metadata": {
+        "issuer": "Let's Encrypt",
+        "serial": "03:AB:CD:EF",
+        "not_before": "2025-01-01T00:00:00Z",
+        "not_after": "2025-04-01T00:00:00Z",
+        "expired": true
+      },
+      "covers": ["example.com", "api.example.com", "staging.example.com"]
+    },
+    {
+      "type": "technology",
+      "value": "nginx/1.25.3",
+      "status": "active",
+      "source": "scan",
+      "tags": ["webserver"],
+      "metadata": {
+        "product": "nginx",
+        "version": "1.25.3",
+        "cpe": "cpe:/a:nginx:nginx:1.25.3"
+      },
+      "detected_on": "api.example.com"
+    },
+    {
+      "type": "technology",
+      "value": "python/3.12",
+      "status": "active",
+      "source": "scan",
+      "tags": ["runtime", "backend"],
+      "metadata": {
+        "product": "Python",
+        "version": "3.12"
+      },
+      "detected_on": "api.example.com"
+    },
+    {
+      "type": "subdomain",
+      "value": "admin.example.com",
+      "status": "stale",
+      "source": "import",
+      "tags": ["internal", "admin"],
+      "metadata": {
+        "environment": "production",
+        "notes": "Admin panel — should be restricted"
+      },
+      "parent": "example.com"
+    },
+    {
+      "type": "service",
+      "value": "http://staging.example.com:8080",
+      "status": "active",
+      "source": "scan",
+      "tags": ["staging", "http"],
+      "metadata": {
+        "port": 8080,
+        "protocol": "tcp",
+        "service_name": "HTTP"
+      },
+      "runs_on": "203.0.113.20"
+    }
+  ]
+}

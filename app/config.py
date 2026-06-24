@@ -13,9 +13,9 @@ class Settings(BaseSettings):
         description="Async SQLAlchemy database URL",
     )
 
-    # ── OpenAI / LangChain ──────────────────────────────
-    openai_api_key: str = Field(default="", description="OpenAI API key")
-    openai_model: str = Field(default="gpt-4o", description="LLM model name")
+    # ── Groq / LangChain ───────────────────────────────
+    groq_api_key: str = Field(default="", description="Groq API key")
+    llm_model: str = Field(default="llama3-70b-8192", description="LLM model name")
 
     # ── App ─────────────────────────────────────────────
     log_level: str = Field(default="info", description="Logging level")
