@@ -22,7 +22,11 @@ class Settings(BaseSettings):
     api_default_page_size: int = Field(default=50, description="Default pagination size")
     api_max_page_size: int = Field(default=200, description="Maximum pagination size")
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "extra": "ignore",
+    }
 
 
 settings = Settings()
