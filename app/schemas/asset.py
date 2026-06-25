@@ -122,7 +122,11 @@ class RelationshipResponse(BaseModel):
     source_asset_id: UUID
     target_asset_id: UUID
     relationship_type: str
-    metadata: dict[str, Any] = Field(default_factory=dict, alias="metadata_")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict,
+        validation_alias="metadata_",
+        serialization_alias="metadata",
+    )
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
@@ -139,7 +143,11 @@ class AssetResponse(BaseModel):
     last_seen: datetime
     source: AssetSource
     tags: list[str]
-    metadata: dict[str, Any] = Field(default_factory=dict, alias="metadata_")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict,
+        validation_alias="asset_metadata",
+        serialization_alias="metadata",
+    )
 
     # Related edges (kept lightweight — just IDs and types)
     outgoing_relationships: list[RelationshipResponse] = Field(default_factory=list)

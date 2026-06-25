@@ -96,7 +96,14 @@ class Asset(Base):
 
     # ── Flexible fields ────────────────────────────────
     tags = Column(ARRAY(Text), nullable=False, default=list, server_default="{}")
-    metadata_ = Column("metadata", JSONB, nullable=False, default=dict, server_default="{}")
+    asset_metadata = Column(
+        "metadata",
+        JSONB,
+        key="asset_metadata",
+        nullable=False,
+        default=dict,
+        server_default="{}",
+    )
 
     # ── Relationships (ORM) ────────────────────────────
     # An asset can be on either side of an AssetRelationship.
@@ -122,7 +129,7 @@ class Asset(Base):
         # GIN index on tags for efficient @> (array-contains) queries.
         Index("ix_asset_tags", "tags", postgresql_using="gin"),
         # GIN index on metadata JSONB for flexible filtering.
-        Index("ix_asset_metadata", "metadata", postgresql_using="gin"),
+        Index("ix_asset_metadata", asset_metadata, postgresql_using="gin"),
     )
 
     def __repr__(self) -> str:

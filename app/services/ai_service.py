@@ -96,7 +96,7 @@ def _serialize_asset(asset: Any) -> dict[str, Any]:
         "last_seen": asset.last_seen.isoformat() if asset.last_seen else None,
         "source": asset.source,
         "tags": asset.tags or [],
-        "metadata": asset.metadata_ or {},
+        "metadata": asset.asset_metadata or {},
     }
 
 
@@ -352,7 +352,7 @@ async def enrich_assets(
             asset_value=asset.value,
             asset_status=asset.status,
             asset_tags=json.dumps(asset.tags or []),
-            asset_metadata=json.dumps(asset.metadata_ or {}, default=str),
+            asset_metadata=json.dumps(asset.asset_metadata or {}, default=str),
         )
 
         response = await llm.ainvoke([HumanMessage(content=prompt)])

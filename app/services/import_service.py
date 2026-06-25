@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import select, func
+from sqlalchemy import case, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -112,7 +112,7 @@ async def _upsert_single_asset(
         "status": item.status,
         "source": item.source,
         "tags": item.tags,
-        "metadata": item.metadata,
+        "asset_metadata": item.metadata,
         "first_seen": now,
         "last_seen": now,
     }
@@ -136,14 +136,14 @@ async def _upsert_single_asset(
             # We'll handle this in Python for clarity.
             # For now, just take incoming — we'll merge below.
             "tags": stmt.excluded.tags,
-            "metadata": stmt.excluded.metadata,
+            Asset.asset_metadata: stmt.excluded.asset_metadata,
             # Status: revert stale → active if re-sighted
-            "status": func.CASE(
+            "status": case(
                 (Asset.status == "stale", "active"),
                 else_=stmt.excluded.status,
             ),
         },
-    ).returning(Asset.id, Asset.tags, Asset.metadata_)
+    ).returning(Asset.id, Asset.tags, Asset.asset_metadata)
 
     result = await session.execute(stmt)
     row = result.fetchone()
@@ -168,10 +168,10 @@ async def _upsert_single_asset(
             asset.tags = merged_tags
 
         # ── Deep-merge metadata ────────────────────────
-        old_meta = asset.metadata_ or {}
+        old_meta = asset.asset_metadata or {}
         new_meta = item.metadata or {}
         if new_meta:
-            asset.metadata_ = deep_merge(old_meta, new_meta)
+            asset.asset_metadata = deep_merge(old_meta, new_meta)
 
     return action, asset
 
