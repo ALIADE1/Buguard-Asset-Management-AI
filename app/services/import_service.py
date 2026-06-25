@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import case, select
+from sqlalchemy import case, cast, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -104,6 +104,8 @@ async def _upsert_single_asset(
     Uses raw PostgreSQL INSERT … ON CONFLICT DO UPDATE.
     """
     now = datetime.now(timezone.utc)
+    active_status = cast("active", Asset.status.type)
+    stale_status = cast("stale", Asset.status.type)
 
     # ── Build the VALUES row ───────────────────────────
     values = {
@@ -139,7 +141,7 @@ async def _upsert_single_asset(
             Asset.asset_metadata: stmt.excluded.asset_metadata,
             # Status: revert stale → active if re-sighted
             "status": case(
-                (Asset.status == "stale", "active"),
+                (Asset.status == stale_status, active_status),
                 else_=stmt.excluded.status,
             ),
         },
